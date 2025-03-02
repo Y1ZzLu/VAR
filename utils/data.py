@@ -28,9 +28,18 @@ def build_dataset(
     train_aug, val_aug = transforms.Compose(train_aug), transforms.Compose(val_aug)
     
     # build dataset
-    train_set = DatasetFolder(root=osp.join(data_path, 'train'), loader=pil_loader, extensions=IMG_EXTENSIONS, transform=train_aug)
-    val_set = DatasetFolder(root=osp.join(data_path, 'val'), loader=pil_loader, extensions=IMG_EXTENSIONS, transform=val_aug)
-    num_classes = 1000
+    # train_set = DatasetFolder(root=osp.join(data_path, 'train'), loader=pil_loader, extensions=IMG_EXTENSIONS, transform=train_aug)
+    # val_set = DatasetFolder(root=osp.join(data_path, 'val'), loader=pil_loader, extensions=IMG_EXTENSIONS, transform=val_aug)
+    train_set = DatasetFolder(root=data_path, loader=pil_loader, extensions=IMG_EXTENSIONS, transform=train_aug)
+    val_set = DatasetFolder(root=data_path, loader=pil_loader, extensions=IMG_EXTENSIONS, transform=val_aug)
+    print(f'[Dataset_class_num] {len(train_set.classes)=}, {len(val_set.classes)=}')
+    num_classes = 4
+
+    if len(train_set.classes) != len(val_set.classes):
+        raise ValueError('train_set and val_set should have the same number of classes')
+    if len(train_set.classes) != num_classes:
+        raise ValueError('train_set and num_classes should have the same number of classe')
+    
     print(f'[Dataset] {len(train_set)=}, {len(val_set)=}, {num_classes=}')
     print_aug(train_aug, '[train]')
     print_aug(val_aug, '[val]')
